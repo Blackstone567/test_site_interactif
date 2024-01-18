@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Magnifique</title>
+    <style>
+        /* Styles pour le corps de la page */
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: url('https://wallpapercosmos.com/w/full/f/9/3/1473698.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            transition: background 0.5s ease, color 0.5s ease;
+        }
+
+        /* Styles pour le header, la barre de navigation, et le footer */
+        header, footer, nav {
+            background-color: rgba(52, 152, 219, 0.8);
+            padding: 15px 0;
+            text-align: center;
+            transition: background-color 0.5s ease;
+        }
+
+        footer {
+            cursor: pointer;
+        }
+
+        /* Styles pour le contenu principal */
+        #content {
+            padding: 20px;
+        }
+
+        /* Styles pour les vignettes de fond d'écran */
+        #background-thumbnails {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+
+        .thumbnail {
+            width: 100px;
+            height: 60px;
+            border: 2px solid rgba(52, 152, 219, 0.8);
+            cursor: pointer;
+            /* Ajout d'une propriété pour afficher l'aperçu d'image en arrière-plan */
+            background-size: cover;
+        }
+
+        /* Styles pour le formulaire de couleur */
+        #color-form {
+            margin: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        label, input, button {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header avec barre de navigation -->
+    <header>
+        <h1>Site Magnifique</h1>
+        <nav>
+            <a href="#">Accueil</a>
+            <a href="#">À propos</a>
+            <a href="#">Contact</a>
+        </nav>
+    </header>
+
+    <!-- Contenu principal -->
+    <div id="content">
+        <h2>Bienvenue sur notre site interactif et magnifique !</h2>
+        <p>Changez le fond d'écran en utilisant le menu ci-dessous :</p>
+
+        <!-- Vignettes pour changer le fond d'écran -->
+        <div id="background-thumbnails">
+            <div class="thumbnail" style="background-image: url('https://wallpapercosmos.com/w/full/f/9/3/1473698.jpg')" onclick="changeBackground('https://wallpapercosmos.com/w/full/f/9/3/1473698.jpg')"></div>
+            <div class="thumbnail" style="background-image: url('https://wallpapercosmos.com/w/full/8/e/3/28466-2560x1920-desktop-hd-mars-background-photo.jpg')" onclick="changeBackground('https://wallpapercosmos.com/w/full/8/e/3/28466-2560x1920-desktop-hd-mars-background-photo.jpg')"></div>
+            <!-- Ajoutez autant de vignettes que nécessaire -->
+        </div>
+
+        <!-- Formulaire pour changer la couleur -->
+        <form id="color-form">
+            <label for="color-picker">Choisissez une couleur pour le fond :</label>
+            <input type="color" id="color-picker" name="color-picker" onchange="changeColors(this.value)">
+            <label for="text-color-picker">Choisissez une couleur pour le texte :</label>
+            <input type="color" id="text-color-picker" name="text-color-picker" onchange="changeTextColors(this.value)">
+            <label for="custom-color">Ou entrez votre couleur préférée :</label>
+            <input type="text" id="custom-color" name="custom-color" placeholder="Ex : #ff6600">
+            <button type="button" onclick="changeColors(document.getElementById('custom-color').value)">Changer</button>
+        </form>
+    </div>
+
+    <!-- Footer interactif -->
+    <footer onclick="toggleBackground()">
+        <p>Cliquez ici pour changer le fond d'écran !</p>
+    </footer>
+
+    <!-- Script JavaScript pour changer le fond d'écran et les couleurs -->
+    <script>
+        // Fonction pour changer le fond d'écran en fonction de la vignette cliquée
+        function changeBackground(url) {
+            document.body.style.background = `url('${url}') no-repeat center center fixed`;
+            document.body.style.backgroundSize = 'cover';
+        }
+
+        // Fonction pour changer la couleur du fond, du header, de la navigation et du footer
+        function changeColors(color) {
+            document.body.style.backgroundColor = color;
+            // Modifier la couleur des éléments header, nav et footer
+            document.querySelectorAll('header, nav, footer').forEach(element => {
+                element.style.backgroundColor = color;
+            });
+        }
+
+        // Fonction pour changer la couleur du texte en fonction de la luminosité du fond
+        function changeTextColors(color) {
+            const textColor = isDarkColor(color) ? '#fff' : '#333';
+            // Modifier la couleur du texte pour le corps de la page
+            document.body.style.color = textColor;
+            // Modifier la couleur du texte pour les éléments header, nav et footer
+            document.querySelectorAll('header, nav, footer').forEach(element => {
+                element.style.color = textColor;
+            });
+        }
+
+        // Fonction pour détecter si une couleur est sombre
+        function isDarkColor(color) {
+            const rgb = hexToRgb(color);
+            // Calculer la luminosité du fond en utilisant la formule W3C
+            const luminosity = 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
+            return luminosity < 128;
+        }
+
+        // Fonction pour convertir une couleur hexadécimale en RGB
+        function hexToRgb(hex) {
+            const bigint = parseInt(hex.slice(1), 16);
+            const r = (bigint >> 16) & 255;
+            const g = (bigint >> 8) & 255;
+            const b = bigint & 255;
+            return { r, g, b };
+        }
+
+        // Fonction pour basculer entre les images d'arrière-plan dans les vignettes
+        function toggleBackground() {
+            const currentBackground = document.body.style.backgroundImage;
+            const defaultBackground = 'https://wallpapercosmos.com/w/full/f/9/3/1473698.jpg';
+            const newBackground = currentBackground.includes(defaultBackground) ? 'https://wallpapercosmos.com/w/full/8/e/3/28466-2560x1920-desktop-hd-mars-background-photo.jpg' : defaultBackground;
+            changeBackground(newBackground);
+        }
+    </script>
+</body>
+</html>
